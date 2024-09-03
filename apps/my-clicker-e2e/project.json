@@ -1,0 +1,9 @@
+{
+  "name": "my-clicker-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/my-clicker-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["my-clicker"],
+  "// targets": "to see all targets run: nx show project my-clicker-e2e --web",
+  "targets": {}
+}
