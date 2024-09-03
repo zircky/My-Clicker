@@ -12,3 +12,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Tap {
+  id            Int      @id @default(autoincrement())
+  availableTaps Int
+  count         BigInt
+  timestamp     DateTime
+}
