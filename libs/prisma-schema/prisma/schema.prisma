@@ -13,9 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         Int    @id @default(autoincrement())
+  username   String @unique
+  telegramId String @unique @map("telegram_id")
+}
+
 model Tap {
-  id            Int      @id @default(autoincrement())
-  availableTaps Int
-  count         BigInt
-  timestamp     DateTime
+  id        Int      @id @default(autoincrement())
+  count     BigInt
+  timestamp DateTime
 }
