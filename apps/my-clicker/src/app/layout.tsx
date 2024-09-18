@@ -1,4 +1,6 @@
 import './global.css';
+import { Root } from '../providers/AuthProvider';
+import React from 'react';
 
 export const metadata = {
   title: 'Welcome to my-clicker',
@@ -12,7 +14,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Root>
+          <div>
+            {children}
+          </div>
+        </Root>
+        </body>
     </html>
   );
 }

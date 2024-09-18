@@ -2,7 +2,8 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { parse, validate } from '@telegram-apps/init-data-node';
 import { PrismaService } from '@my-clicker/prisma-client';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
+import { returnUserObject } from './return-user.object';
 
 @Injectable()
 export class PrismaAuthService {
@@ -18,9 +19,16 @@ export class PrismaAuthService {
 
       const parsedData = parse(initData)
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const user = await this.finOrCreateUser(parsedData.user.id, parsedData.user.username)
+      if (!parsedData.user) {
+        throw new Error('User data is required');
+      }
+
+      const username = parsedData.user.username;
+      if (!username) {
+        throw new Error('Username is required');
+      }
+
+      const user = await this.findOrCreateUser(parsedData.user.id, parsedData.user.username)
 
       const payload = { id: user.id }
 
@@ -33,7 +41,11 @@ export class PrismaAuthService {
     }
   }
 
-  async findOrCreateUser(telegramId: bigint, username: string) {
+  async findOrCreateUser(telegramId: number, username: string | undefined) {
+    if (!username) {
+      throw new Error('Username is required');
+    }
+
     let user = await this.prisma.user.findUnique({
       where: { telegramId },
     });
@@ -50,19 +62,29 @@ export class PrismaAuthService {
     return user;
   }
 
-  async getUserById(id: number) {
+  async getUserById(id: number, selectObject: Prisma.UserSelect = {}) {
+    if (!id) {
+      throw new Error('ID is required');
+    }
     const user = await this.prisma.user.findUnique({
-      where: { id },
+      where: {
+        id
+      },
+
+      select: {
+        // ...returnUserObject,
+        ...selectObject
+      }
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new Error(`User with ID ${id} not found`);
     }
 
     return user;
   }
 
-  async findByTelegramId(telegramId: bigint): Promise<User | null> {
+  async findByTelegramId(telegramId: number): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { telegramId },
     });

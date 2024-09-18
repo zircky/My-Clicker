@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { PrismaAuthService } from '@my-clicker/prisma-auth';
+import { jwtConstants, PrismaAuthService } from '@my-clicker/prisma-auth';
+import { PrismaService } from '@my-clicker/prisma-client';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, PrismaAuthService],
+  providers: [PrismaAuthService, PrismaService],
 })
 export class AuthModule {}

@@ -14,9 +14,9 @@ datasource db {
 }
 
 model User {
-  id         Int    @id @default(autoincrement())
-  username   String @unique
-  telegramId BigInt @unique @map("telegram_id")
+  id         Int     @id @default(autoincrement())
+  username   String? @unique
+  telegramId Int?    @unique @map("telegram_id")
 }
 
 model Tap {
